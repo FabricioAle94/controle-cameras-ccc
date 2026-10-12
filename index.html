@@ -3,74 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Controle de Câmeras CCC</title>
+    <title>Controle de Câmeras CCC - Dark Mode</title>
     <style>
+        /* TEMA ESCURO AZULADO */
         :root {
-            --bg-color: #f4f7f6;
-            --primary: #2c3e50;
-            --accent: #3498db;
-            --success: #2ecc71;
-            --danger: #e74c3c;
-            --archive: #95a5a6;
-            --text: #333;
-            --card-bg: #fff;
+            --bg-color: #0f172a;        /* Azul escuro profundo (fundo) */
+            --primary: #1e293b;         /* Azul ardósia (cards e header) */
+            --accent: #3b82f6;          /* Azul vibrante (botões ativos) */
+            --success: #10b981;         /* Verde esmeralda */
+            --danger: #ef4444;          /* Vermelho suave */
+            --archive: #64748b;         /* Cinzento azulado */
+            --text: #f8fafc;            /* Branco gelo (texto principal) */
+            --text-muted: #94a3b8;      /* Cinzento claro (texto secundário) */
+            --border: #334155;          /* Linhas divisórias */
+            --input-bg: #0f172a;        /* Fundo dos campos de texto */
         }
         
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         body { background-color: var(--bg-color); color: var(--text); }
         
         /* TELA DE LOGIN */
-        #login-container { height: 100vh; display: flex; justify-content: center; align-items: center; background-color: var(--primary); }
-        .login-box { background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 25px rgba(0,0,0,0.2); width: 100%; max-width: 400px; text-align: center; }
-        .login-box h2 { color: var(--primary); margin-bottom: 20px; }
-        .login-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 4px; font-size: 16px; }
+        #login-container { height: 100vh; display: flex; justify-content: center; align-items: center; background-color: var(--bg-color); }
+        .login-box { background: var(--primary); padding: 40px; border-radius: 8px; border: 1px solid var(--border); box-shadow: 0 10px 25px rgba(0,0,0,0.5); width: 100%; max-width: 400px; text-align: center; }
+        .login-box h2 { color: var(--text); margin-bottom: 20px; }
+        .login-input { width: 100%; padding: 12px; margin-bottom: 15px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 4px; font-size: 16px; }
         .btn-login { width: 100%; padding: 12px; background: var(--accent); color: white; border: none; border-radius: 4px; font-size: 16px; font-weight: bold; cursor: pointer; transition: 0.3s; }
-        .btn-login:hover { background: #2980b9; }
+        .btn-login:hover { background: #2563eb; }
         #login-error { color: var(--danger); margin-top: 10px; font-size: 14px; font-weight: bold; display: none; }
 
-        /* PAINEL (Oculto por padrão) */
+        /* PAINEL PRINCIPAL */
         #app-container { display: none; padding: 20px; }
         
-        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--primary); color: white; padding: 20px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; background: var(--primary); color: white; padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
         .header-title-area { display: flex; flex-direction: column; gap: 5px; }
-        .btn-logout { background: transparent; border: 1px solid white; color: white; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; width: fit-content; margin-top: 5px; }
-        .btn-logout:hover { background: rgba(255,255,255,0.1); }
+        .btn-logout { background: transparent; border: 1px solid var(--border); color: var(--text-muted); padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 12px; width: fit-content; margin-top: 5px; }
+        .btn-logout:hover { background: var(--border); color: var(--text); }
         
         .dashboard { display: flex; gap: 15px; }
-        .stat-card { background: rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 6px; text-align: center; min-width: 100px; }
+        .stat-card { background: rgba(0,0,0,0.2); padding: 10px 20px; border-radius: 6px; border: 1px solid var(--border); text-align: center; min-width: 100px; }
         .stat-card span { display: block; font-size: 24px; font-weight: bold; }
         
         .controls { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; gap: 10px; flex-wrap: wrap; }
         .tabs { display: flex; gap: 10px; }
-        .tab-btn { padding: 10px 20px; border: none; background: #ddd; cursor: pointer; border-radius: 4px; font-weight: bold; transition: 0.3s; }
-        .tab-btn.active { background: var(--accent); color: white; }
-        .tab-btn[data-group="ARQUIVADOS"].active { background: var(--archive); }
+        .tab-btn { padding: 10px 20px; border: 1px solid var(--border); background: var(--primary); color: var(--text-muted); cursor: pointer; border-radius: 4px; font-weight: bold; transition: 0.3s; }
+        .tab-btn:hover { background: var(--border); }
+        .tab-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+        .tab-btn[data-group="ARQUIVADOS"].active { background: var(--archive); border-color: var(--archive); }
         
         .filters { display: flex; gap: 15px; align-items: center; }
-        .filters select, .filters input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; }
+        .filters select, .filters input { padding: 10px; border: 1px solid var(--border); background: var(--primary); color: var(--text); border-radius: 4px; }
         .filters input { width: 250px; }
+        .filters input::placeholder { color: var(--text-muted); }
         
-        .progress-bar { background: #e8f8f5; padding: 10px 15px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border: 1px solid #d1f2eb; color: #16a085; font-weight: bold; }
-        .btn-reset { background: #16a085; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .progress-bar { background: rgba(16, 185, 129, 0.1); padding: 10px 15px; border-radius: 6px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px; border: 1px solid rgba(16, 185, 129, 0.2); color: var(--success); font-weight: bold; }
+        .btn-reset { background: var(--success); color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .btn-reset:hover { background: #059669; }
+
+        table { width: 100%; border-collapse: collapse; background: var(--primary); border-radius: 8px; overflow: hidden; border: 1px solid var(--border); }
+        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        th { background-color: #0f172a; color: var(--text-muted); font-weight: 600; text-transform: uppercase; font-size: 13px; }
+        tr { transition: background-color 0.2s; }
+        tr:hover { background-color: var(--border); }
+        tr.row-checked { background-color: rgba(16, 185, 129, 0.15); }
+        tr.row-checked td { opacity: 0.7; }
         
-        table { width: 100%; border-collapse: collapse; background: var(--card-bg); border-radius: 8px; overflow: hidden; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #eee; vertical-align: middle; }
-        th { background-color: var(--primary); color: white; }
-        tr:hover { background-color: #f9f9f9; }
-        tr.row-checked { background-color: #eafaf1; }
-        tr.row-checked td { opacity: 0.8; }
+        .check-input { width: 20px; height: 20px; cursor: pointer; accent-color: var(--success); }
+        select, .desc-input { padding: 8px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 4px; width: 100%; }
+        .desc-input::placeholder { color: var(--text-muted); }
+        .server-input { font-weight: bold; text-align: center; cursor: pointer; }
+        .server-input:focus { outline: 1px solid var(--accent); }
         
-        .check-input { width: 22px; height: 22px; cursor: pointer; accent-color: var(--success); }
-        select, .desc-input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; width: 100%; }
-        .server-input { font-weight: bold; text-align: center; cursor: pointer; background-color: #f0f4f8; }
+        /* Cores de Estado dentro dos selects */
+        .status-ok { background-color: rgba(16, 185, 129, 0.2); color: var(--success); font-weight: bold; border-color: var(--success); }
+        .status-def { background-color: rgba(239, 68, 68, 0.2); color: var(--danger); font-weight: bold; border-color: var(--danger); }
+        .status-des { background-color: rgba(100, 116, 139, 0.2); color: var(--archive); font-weight: bold; border-color: var(--archive); }
         
-        .status-ok { background-color: var(--success); color: white; border: none; font-weight: bold; }
-        .status-def { background-color: var(--danger); color: white; border: none; font-weight: bold; }
-        .status-des { background-color: var(--archive); color: white; border: none; font-weight: bold; }
+        .report-section { margin-top: 30px; background: var(--primary); padding: 20px; border-radius: 8px; border: 1px solid var(--border); }
+        .report-section h3 { margin-bottom: 15px; color: var(--text); }
+        textarea { width: 100%; height: 200px; padding: 15px; border: 1px solid var(--border); background: var(--input-bg); color: var(--text); border-radius: 4px; font-family: monospace; font-size: 14px; }
         
-        .report-section { margin-top: 30px; background: var(--card-bg); padding: 20px; border-radius: 8px; }
-        textarea { width: 100%; height: 200px; padding: 15px; border: 1px solid #ccc; border-radius: 4px; font-family: monospace; }
-        .btn-action { margin-top: 10px; padding: 10px 20px; border: none; background: var(--accent); color: white; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-action { padding: 10px 20px; border: none; background: var(--accent); color: white; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        .btn-action:hover { opacity: 0.8; }
+        .btn-danger { background: var(--danger); }
+        .btn-success { background: var(--success); }
     </style>
 </head>
 <body>
@@ -91,13 +107,13 @@
         <header>
             <div class="header-title-area">
                 <h1>Central de Controle de Câmeras</h1>
-                <div id="connection-status" style="font-size: 13px; color: #2ecc71;">🟢 Sincronização Ativa</div>
+                <div id="connection-status" style="font-size: 13px; color: var(--success);">🟢 Sincronização Ativa</div>
                 <button class="btn-logout" id="btn-sair">Sair do Sistema</button>
             </div>
             <div class="dashboard">
-                <div class="stat-card">Ativos<span id="count-total">0</span></div>
-                <div class="stat-card" style="color: #2ecc71;">OK<span id="count-ok">0</span></div>
-                <div class="stat-card" style="color: #ff6b6b;">Defeito<span id="count-def">0</span></div>
+                <div class="stat-card">Ativos<span id="count-total" style="color: var(--text);">0</span></div>
+                <div class="stat-card" style="color: var(--success);">OK<span id="count-ok">0</span></div>
+                <div class="stat-card" style="color: var(--danger);">Defeito<span id="count-def">0</span></div>
             </div>
         </header>
 
@@ -120,7 +136,7 @@
 
         <div class="progress-bar" id="progress-bar-container">
             <span id="progress-text">Verificados: 0 / 0</span>
-            <button class="btn-reset" id="btn-reset">Limpar Vistos</button>
+            <button class="btn-reset" id="btn-reset">Limpar Vistos do Grupo</button>
         </div>
 
         <table>
@@ -130,17 +146,20 @@
                     <th>Condomínio</th>
                     <th style="width: 140px;">Estado</th>
                     <th style="width: 130px;">Servidor ⮂</th>
-                    <th>Descrição</th>
+                    <th>Descrição do Defeito</th>
                 </tr>
             </thead>
             <tbody id="table-body"></tbody>
         </table>
 
         <div class="report-section">
-            <h3 id="report-title">Relatório</h3>
-            <textarea id="report-output" readonly></textarea>
-            <button class="btn-action" id="btn-generate-report">Gerar Relatório</button>
-            <button class="btn-action" id="btn-copy-report" style="background: var(--success);">Copiar</button>
+            <h3 id="report-title">Relatório do Turno</h3>
+            <textarea id="report-output" readonly placeholder="O relatório gerado aparecerá aqui..."></textarea>
+            <div class="btn-group">
+                <button class="btn-action" id="btn-generate-report">Gerar Relatório</button>
+                <button class="btn-action btn-success" id="btn-copy-report">Copiar</button>
+                <button class="btn-action btn-danger" id="btn-clear-report">Apagar Relatório</button>
+            </div>
         </div>
     </div>
 
@@ -150,15 +169,18 @@
         import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
 
+        // ==========================================
+        // COLOQUE SUAS CHAVES DO FIREBASE AQUI ABAIXO
+        // ==========================================
         const firebaseConfig = {
-  apiKey: "AIzaSyBB1u1pWpE4kdnLSuGsbLWqAtOn3Bo9MRk",
-  authDomain: "ccc-controle-cameras.firebaseapp.com",
-  projectId: "ccc-controle-cameras",
-  storageBucket: "ccc-controle-cameras.firebasestorage.app",
-  messagingSenderId: "989470263859",
-  appId: "1:989470263859:web:d1f4c6200e3581d841b146"
-};
-
+            apiKey: "AIzaSyBB1u1pWpE4kdnLSuGsbLWqAtOn3Bo9MRk",
+            authDomain: "ccc-controle-cameras.firebaseapp.com",
+            projectId: "ccc-controle-cameras",
+            storageBucket: "ccc-controle-cameras.firebasestorage.app",
+            messagingSenderId: "989470263859",
+            appId: "1:989470263859:web:d1f4c6200e3581d841b146"
+        };
+        // ==========================================
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
@@ -174,38 +196,27 @@
         const appContainer = document.getElementById('app-container');
         const loginError = document.getElementById('login-error');
 
-        // Monitora o estado da sessão (se o usuário está logado ou não)
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                // Usuário logado: esconde tela de login e mostra o painel
                 loginContainer.style.display = 'none';
                 appContainer.style.display = 'block';
-                iniciarSincronizacao(); // Começa a puxar os dados do banco
+                iniciarSincronizacao();
+                verificarRelatorioSalvo(); // Carrega relatório se existir e estiver dentro das 12h
             } else {
-                // Usuário deslogado
                 loginContainer.style.display = 'flex';
                 appContainer.style.display = 'none';
-                if(unsubscribeSnapshot) unsubscribeSnapshot(); // Para de puxar dados
+                if(unsubscribeSnapshot) unsubscribeSnapshot();
             }
         });
 
-        // Botão de Entrar
         document.getElementById('btn-entrar').addEventListener('click', () => {
             const email = document.getElementById('email').value;
             const senha = document.getElementById('senha').value;
             loginError.style.display = 'none';
-            
-            signInWithEmailAndPassword(auth, email, senha)
-                .catch((error) => {
-                    console.error(error);
-                    loginError.style.display = 'block';
-                });
+            signInWithEmailAndPassword(auth, email, senha).catch(() => loginError.style.display = 'block');
         });
 
-        // Botão de Sair
-        document.getElementById('btn-sair').addEventListener('click', () => {
-            signOut(auth);
-        });
+        document.getElementById('btn-sair').addEventListener('click', () => signOut(auth));
 
         // --- SISTEMA DO PAINEL ---
         function iniciarSincronizacao() {
@@ -215,8 +226,9 @@
                     renderTable();
                 }
             }, (error) => {
-                console.error("Erro no Firebase:", error);
+                console.error("Erro Firebase:", error);
                 document.getElementById('connection-status').innerHTML = "🔴 Erro de Conexão";
+                document.getElementById('connection-status').style.color = "var(--danger)";
             });
         }
 
@@ -248,10 +260,7 @@
                     if (item.checked) groupChecked++;
                 }
 
-                const matchSearch = item.name.toLowerCase().includes(searchTerm);
-                const matchServer = serverFilter === 'ALL' || item.server === serverFilter;
-
-                return matchGroup && matchSearch && matchServer;
+                return matchGroup && item.name.toLowerCase().includes(searchTerm) && (serverFilter === 'ALL' || item.server === serverFilter);
             });
 
             filteredData.sort((a, b) => a.name.localeCompare(b.name));
@@ -259,8 +268,8 @@
             document.getElementById('count-total').innerText = activeCount;
             document.getElementById('count-ok').innerText = okCount;
             document.getElementById('count-def').innerText = defCount;
-            document.getElementById('progress-text').innerText = `Verificados: ${groupChecked} de ${groupTotal}`;
-            document.getElementById('report-title').innerText = `Geração de Relatório - ${currentGroup}`;
+            document.getElementById('progress-text').innerText = `Verificados no Grupo ${currentGroup}: ${groupChecked} de ${groupTotal}`;
+            document.getElementById('report-title').innerText = `Geração de Relatório - Grupo ${currentGroup}`;
             document.getElementById('progress-bar-container').style.display = (currentGroup === 'ARQUIVADOS') ? 'none' : 'flex';
 
             filteredData.forEach(item => {
@@ -318,36 +327,109 @@
             }
         });
 
+        // --- SISTEMA DE RELATÓRIO MELHORADO ---
+        
+        // Função para formatar o texto: "PORTAO; CAMERA" vira "Portao; Camera"
+        function formatarDescricao(texto) {
+            if (!texto) return "";
+            return texto.split(';')
+                .map(parte => parte.trim()) // Remove espaços extra em volta
+                .filter(parte => parte.length > 0) // Ignora partes vazias caso haja um ; no fim
+                .map(parte => {
+                    let min = parte.toLowerCase();
+                    return min.charAt(0).toUpperCase() + min.slice(1); // Primeira letra maiúscula
+                })
+                .join('; '); // Junta com ; seguido de um espaço
+        }
+
+        function salvarRelatorioMemoria(texto) {
+            const relatorioData = { texto: texto, timestamp: Date.now() };
+            localStorage.setItem('relatorio_ccc', JSON.stringify(relatorioData));
+            agendarLimpezaRelatorio(12 * 60 * 60 * 1000); // Agenda para 12h
+        }
+
+        function limparRelatorio() {
+            document.getElementById('report-output').value = '';
+            localStorage.removeItem('relatorio_ccc');
+        }
+
+        let timeoutLimpeza = null;
+        function agendarLimpezaRelatorio(tempoRestante) {
+            if(timeoutLimpeza) clearTimeout(timeoutLimpeza);
+            timeoutLimpeza = setTimeout(limparRelatorio, tempoRestante);
+        }
+
+        function verificarRelatorioSalvo() {
+            const guardado = localStorage.getItem('relatorio_ccc');
+            if (guardado) {
+                const dados = JSON.parse(guardado);
+                const dozeHorasEmMs = 12 * 60 * 60 * 1000;
+                const tempoPassado = Date.now() - dados.timestamp;
+                
+                if (tempoPassado > dozeHorasEmMs) {
+                    limparRelatorio(); // Já expirou
+                } else {
+                    document.getElementById('report-output').value = dados.texto;
+                    agendarLimpezaRelatorio(dozeHorasEmMs - tempoPassado); // Continua contagem
+                }
+            }
+        }
+
         document.getElementById('btn-generate-report').addEventListener('click', () => {
             if (currentGroup === 'ARQUIVADOS') return;
-            const today = new Date().toLocaleDateString('pt-BR');
-            let reportStr = `RELAÇÃO CÂMERAS COM DEFEITO DIA → ${today}\n\n                                        \`GRUPO ${currentGroup}\`\n\n`;
+            
+            // Pergunta o dia
+            const dataAtual = new Date();
+            let diaInput = prompt("Qual o dia do relatório?", dataAtual.getDate());
+            
+            if (!diaInput) return; // Se o utilizador clicar cancelar
+
+            // Formata a data com o mês e ano do sistema
+            diaInput = diaInput.toString().padStart(2, '0');
+            const mesStr = dataAtual.toLocaleDateString('pt-BR', { month: 'long' });
+            const anoStr = dataAtual.getFullYear();
+            const dataCabecalho = `${diaInput} de ${mesStr} de ${anoStr}`;
+
+            let reportStr = `RELAÇÃO CÂMERAS COM DEFEITO DIA → ${dataCabecalho}\n\n`;
+            reportStr += `                                        \`GRUPO ${currentGroup}\`\n\n`;
+            
             const defItems = cameraData.filter(d => d.group === currentGroup && d.status === 'DEF');
             
             if (defItems.length > 0) {
-                defItems.sort((a, b) => a.name.localeCompare(b.name)).forEach(item => reportStr += `- CCC DEFEITO ${item.name} → ${item.desc}\n\n`);
-            } else { reportStr += "Nenhum equipamento com defeito registrado.\n"; }
+                defItems.sort((a, b) => a.name.localeCompare(b.name)).forEach(item => {
+                    const descFormatada = formatarDescricao(item.desc);
+                    reportStr += `- CCC DEFEITO ${item.name} → ${descFormatada}\n\n`;
+                });
+            } else { 
+                reportStr += "Nenhum equipamento com defeito registrado.\n"; 
+            }
+            
             document.getElementById('report-output').value = reportStr;
+            salvarRelatorioMemoria(reportStr);
         });
 
         document.getElementById('btn-copy-report').addEventListener('click', () => {
             document.getElementById('report-output').select();
             document.execCommand('copy');
-            alert('Copiado!');
         });
 
-        document.getElementById('search').addEventListener('input', renderTable);
-        document.getElementById('filter-server').addEventListener('change', renderTable);
-        
+        document.getElementById('btn-clear-report').addEventListener('click', () => {
+            if(confirm("Tem a certeza que deseja apagar o relatório desta caixa de texto?")) {
+                limparRelatorio();
+            }
+        });
+
         document.querySelectorAll('.tab-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
                 e.target.classList.add('active');
                 currentGroup = e.target.dataset.group;
-                document.getElementById('report-output').value = '';
                 renderTable();
             });
         });
+        
+        document.getElementById('search').addEventListener('input', renderTable);
+        document.getElementById('filter-server').addEventListener('change', renderTable);
     </script>
 </body>
 </html>
